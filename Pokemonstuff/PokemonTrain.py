@@ -2,8 +2,10 @@ import numpy as np
 import os
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import keras
 
-data_dir = os.path.expanduser(r'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset')
+#data_dir = os.path.expanduser(r'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset') #Daniels path
+data_dir = os.path.expanduser(fr'~\Documents\[X] Projects\MachineLearningDataset\Pokemon Dataset\Pokemon Dataset') #HC's path
 
 batch_size = 32
 img_height = 180
@@ -60,13 +62,15 @@ model.compile(
   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
   metrics=['accuracy'])
 
+model = tf.keras.models.load_model("pokemon.keras") # LOAD THE SAVED MODEL
+
 model.fit(
-  train_ds,
-  validation_data=val_ds,
-  epochs=3
+ train_ds,
+ validation_data=val_ds,
+ epochs=1
 )
 
-model.save("pokemon.keras")
+model.save("pokemon_1.keras") # FOR HC : REMEMBER TO 'CD' INTO THIS DIRECTIVE!!!
 
 # plt.figure(figsize=(10, 10))
 # for images, labels in train_ds.take(1):
