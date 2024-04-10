@@ -4,12 +4,16 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import keras
 
-# data_dir = os.path.expanduser(r'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset') #Daniels path
-data_dir = os.path.expanduser(fr'~\Documents\[X] Projects\MachineLearningDataset\Pokemon Dataset\Pokemon Dataset') #HC's path
 
 
-# MASTER EPOCH COUNT
+# MASTER INPUTS
+data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset') # Database Directory
+model_input = "pokemon.keras"
+model_output = "pokemon_1.keras"
 epochCount = 4
+# MASTER INPUTS
+
+
 
 batch_size = 32
 img_height = 180
@@ -66,76 +70,44 @@ model.compile(
   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
   metrics=['accuracy'])
 
-model = tf.keras.models.load_model("pokemon.keras") # LOAD THE SAVED MODEL ---------------------------------------------------------------------- LOAD THE SAVED MODEL
+model = tf.keras.models.load_model(model_input) # LOAD THE SAVED MODEL ---------------------------------------------------------------------- LOAD THE SAVED MODEL
 
+history = model.fit(
+  train_ds,
+  validation_data=val_ds,
+  epochs=epochCount
+)
 
-# predictions = model.predict(train_ds)
-# # print(predictions)
-# val_loss, val_acc = model.evaluate(val_ds)
-# print(val_loss, val_acc)
-#
-# print(np.argmax(predictions[0]))
-#
-# plt.imshow(train_ds[0], cmap=plt.cm.binary)
-# plt.show()
+model.save(model_output)
 
-for images, labels in val_ds:
-  # Make predictions using your model
-  predictions = model.predict(images)
+acc = history.history['accuracy']
+val_acc = history.history['val_accuracy']
 
-  # Visualize the images along with their predicted labels
-  for i in range(len(images)):
-    image = images[i]
-    label = labels[i]
-    predicted_label = np.argmax(predictions[i])
+loss = history.history['loss']
+val_loss = history.history['val_loss']
 
-    # Convert label indices to class names
-    true_class_name = class_names[label]
-    predicted_class_name = class_names[predicted_label]
+epochs_range = range(epochCount)
 
-    # Display the image along with true and predicted labels
-    plt.figure()
-    plt.imshow(image.numpy().astype("uint8"))
-    plt.title(f"True: {true_class_name}, Predicted: {predicted_class_name}")
-    plt.axis("off")
-    plt.show()
+plt.figure(figsize=(8, 8))
+plt.subplot(1, 2, 1)
+plt.plot(epochs_range, acc, label='Training Accuracy')
+plt.plot(epochs_range, val_acc, label='Validation Accuracy')
+plt.legend(loc='lower right')
+plt.title('Training and Validation Accuracy')
 
-# history = model.fit(
-#   train_ds,
-#   validation_data=val_ds,
-#   epochs=epochCount
-# )
+plt.subplot(1, 2, 2)
+plt.plot(epochs_range, loss, label='Training Loss')
+plt.plot(epochs_range, val_loss, label='Validation Loss')
+plt.legend(loc='upper right')
+plt.title('Training and Validation Loss')
+plt.show()
 
-# model.save("pokemon.keras") # FOR HC # cd: C:\Users\hclun\Documents\`[X`] Projects\MachineLearning\PokeStuff
-
-# acc = history.history['accuracy']
-# val_acc = history.history['val_accuracy']
-
-# loss = history.history['loss']
-# val_loss = history.history['val_loss']
-
-# epochs_range = range(epochCount)
-
-# plt.figure(figsize=(8, 8))
-# plt.subplot(1, 2, 1)
-# plt.plot(epochs_range, acc, label='Training Accuracy')
-# plt.plot(epochs_range, val_acc, label='Validation Accuracy')
-# plt.legend(loc='lower right')
-# plt.title('Training and Validation Accuracy')
-
-# plt.subplot(1, 2, 2)
-# plt.plot(epochs_range, loss, label='Training Loss')
-# plt.plot(epochs_range, val_loss, label='Validation Loss')
-# plt.legend(loc='upper right')
-# plt.title('Training and Validation Loss')
-# plt.show()
-
-# plt.figure(figsize=(10, 10))
-# for images, labels in train_ds.take(1):
-#     for i in range(9):
-#         ax = plt.subplot(3, 3, i + 1)
-#         resized_image = tf.image.resize(images[i], (img_height, img_width))
-#         plt.imshow(resized_image.numpy().astype("uint8"))
-#         plt.title(class_names[labels[i]])
-#         plt.axis("off")
-# plt.show()
+plt.figure(figsize=(10, 10))
+for images, labels in train_ds.take(1):
+    for i in range(9):
+        ax = plt.subplot(3, 3, i + 1)
+        resized_image = tf.image.resize(images[i], (img_height, img_width))
+        plt.imshow(resized_image.numpy().astype("uint8"))
+        plt.title(class_names[labels[i]])
+        plt.axis("off")
+plt.show()
