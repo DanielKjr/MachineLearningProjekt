@@ -11,6 +11,7 @@ data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Datas
 model_input = "pokemon.keras"
 model_output = "pokemon_1.keras"
 epochCount = 2
+loadExistingModel = True
 # MASTER INPUTS
 
 
@@ -70,7 +71,8 @@ model.compile(
   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
   metrics=['accuracy'])
 
-model = tf.keras.models.load_model(model_input) # LOAD THE SAVED MODEL ---------------------------------------------------------------------- LOAD THE SAVED MODEL
+if(loadExistingModel):
+  model = tf.keras.models.load_model(model_input)
 
 history = model.fit(
   train_ds,
