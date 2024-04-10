@@ -7,6 +7,10 @@ import keras
 #data_dir = os.path.expanduser(r'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset') #Daniels path
 data_dir = os.path.expanduser(fr'~\Documents\[X] Projects\MachineLearningDataset\Pokemon Dataset\Pokemon Dataset') #HC's path
 
+
+# MASTER EPOCH COUNT
+epochCount = 4;
+
 batch_size = 32
 img_height = 180
 img_width = 180
@@ -42,7 +46,7 @@ AUTOTUNE = tf.data.AUTOTUNE
 train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
-num_classes = 973
+num_classes = 973 # Amount of pokemons in dataset
 
 model = tf.keras.Sequential([
   tf.keras.layers.Rescaling(1./255),
@@ -54,7 +58,7 @@ model = tf.keras.Sequential([
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Flatten(),
   tf.keras.layers.Dense(128, activation='relu'),
-  tf.keras.layers.Dense(num_classes)
+  tf.keras.layers.Dense(num_classes, activation='softmax')
 ])
 
 model.compile(
@@ -62,15 +66,41 @@ model.compile(
   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
   metrics=['accuracy'])
 
-model = tf.keras.models.load_model("pokemon.keras") # LOAD THE SAVED MODEL
+model = tf.keras.models.load_model("pokemon.keras") # LOAD THE SAVED MODEL ---------------------------------------------------------------------- LOAD THE SAVED MODEL
 
-model.fit(
- train_ds,
- validation_data=val_ds,
- epochs=1
-)
+predictions = model.predict(first_image)
+val_loss, val_acc = model.evaluate(train_ds, val_ds)
+print(val_loss, val_acc)
 
-model.save("pokemon_1.keras") # FOR HC : REMEMBER TO 'CD' INTO THIS DIRECTIVE!!!
+# history = model.fit(
+#   train_ds,
+#   validation_data=val_ds,
+#   epochs=epochCount
+# )
+
+model.save("pokemon.keras") # FOR HC # cd: C:\Users\hclun\Documents\`[X`] Projects\MachineLearning\PokeStuff
+
+# acc = history.history['accuracy']
+# val_acc = history.history['val_accuracy']
+
+# loss = history.history['loss']
+# val_loss = history.history['val_loss']
+
+# epochs_range = range(epochCount)
+
+# plt.figure(figsize=(8, 8))
+# plt.subplot(1, 2, 1)
+# plt.plot(epochs_range, acc, label='Training Accuracy')
+# plt.plot(epochs_range, val_acc, label='Validation Accuracy')
+# plt.legend(loc='lower right')
+# plt.title('Training and Validation Accuracy')
+
+# plt.subplot(1, 2, 2)
+# plt.plot(epochs_range, loss, label='Training Loss')
+# plt.plot(epochs_range, val_loss, label='Validation Loss')
+# plt.legend(loc='upper right')
+# plt.title('Training and Validation Loss')
+# plt.show()
 
 # plt.figure(figsize=(10, 10))
 # for images, labels in train_ds.take(1):
