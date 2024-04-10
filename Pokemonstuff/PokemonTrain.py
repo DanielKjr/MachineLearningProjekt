@@ -4,12 +4,12 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import keras
 
-#data_dir = os.path.expanduser(r'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset') #Daniels path
+# data_dir = os.path.expanduser(r'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset') #Daniels path
 data_dir = os.path.expanduser(fr'~\Documents\[X] Projects\MachineLearningDataset\Pokemon Dataset\Pokemon Dataset') #HC's path
 
 
 # MASTER EPOCH COUNT
-epochCount = 4;
+epochCount = 4
 
 batch_size = 32
 img_height = 180
@@ -41,10 +41,10 @@ first_image = image_batch[0]
 # print(np.min(first_image), np.max(first_image))
 
 
-AUTOTUNE = tf.data.AUTOTUNE
+# AUTOTUNE = tf.data.AUTOTUNE
 
-train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
-val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
+# train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
+# val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
 num_classes = 973 # Amount of pokemons in dataset
 
@@ -68,9 +68,37 @@ model.compile(
 
 model = tf.keras.models.load_model("pokemon.keras") # LOAD THE SAVED MODEL ---------------------------------------------------------------------- LOAD THE SAVED MODEL
 
-predictions = model.predict(first_image)
-val_loss, val_acc = model.evaluate(train_ds, val_ds)
-print(val_loss, val_acc)
+
+# predictions = model.predict(train_ds)
+# # print(predictions)
+# val_loss, val_acc = model.evaluate(val_ds)
+# print(val_loss, val_acc)
+#
+# print(np.argmax(predictions[0]))
+#
+# plt.imshow(train_ds[0], cmap=plt.cm.binary)
+# plt.show()
+
+for images, labels in val_ds:
+  # Make predictions using your model
+  predictions = model.predict(images)
+
+  # Visualize the images along with their predicted labels
+  for i in range(len(images)):
+    image = images[i]
+    label = labels[i]
+    predicted_label = np.argmax(predictions[i])
+
+    # Convert label indices to class names
+    true_class_name = class_names[label]
+    predicted_class_name = class_names[predicted_label]
+
+    # Display the image along with true and predicted labels
+    plt.figure()
+    plt.imshow(image.numpy().astype("uint8"))
+    plt.title(f"True: {true_class_name}, Predicted: {predicted_class_name}")
+    plt.axis("off")
+    plt.show()
 
 # history = model.fit(
 #   train_ds,
@@ -78,7 +106,7 @@ print(val_loss, val_acc)
 #   epochs=epochCount
 # )
 
-model.save("pokemon.keras") # FOR HC # cd: C:\Users\hclun\Documents\`[X`] Projects\MachineLearning\PokeStuff
+# model.save("pokemon.keras") # FOR HC # cd: C:\Users\hclun\Documents\`[X`] Projects\MachineLearning\PokeStuff
 
 # acc = history.history['accuracy']
 # val_acc = history.history['val_accuracy']
