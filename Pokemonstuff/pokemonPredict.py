@@ -8,7 +8,7 @@ import keras
 
 # MASTER INPUTS
 data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset') # Database Directory
-model_name = "pokemon.keras"
+model_input = "pokemon.keras"
 # MASTER INPUTS
 
 
@@ -59,7 +59,7 @@ model.compile(
   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
   metrics=['accuracy'])
 
-model = tf.keras.models.load_model(model_name) # LOAD THE SAVED MODEL ---------------------------------------------------------------------- LOAD THE SAVED MODEL
+model = tf.keras.models.load_model(model_input) # LOAD THE SAVED MODEL ---------------------------------------------------------------------- LOAD THE SAVED MODEL
 
 for images, labels in val_ds:
   # Make predictions using your model

@@ -10,7 +10,7 @@ import keras
 data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset') # Database Directory
 model_input = "pokemon.keras"
 model_output = "pokemon_1.keras"
-epochCount = 4
+epochCount = 2
 # MASTER INPUTS
 
 
