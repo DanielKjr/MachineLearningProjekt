@@ -10,7 +10,6 @@ from scikeras.wrappers import KerasRegressor
 
 # MASTER INPUTS
 data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset') # Database Directory
-epochCount = 2
 batch_size = 32
 img_height = 180
 img_width = 180
@@ -81,7 +80,7 @@ grid_search = GridSearchCV(estimator = classifier,
                            param_grid = parameters,
                            scoring = 'neg_mean_absolute_error',
                            cv = 5)
-grid_search.fit(X_train, y_train, validation_data=(X_val, y_val))
+grid_search.fit(X_train, y_train, verbose=0)
 best_parameters = grid_search.best_params_
 best_score = grid_search.best_score_
 
