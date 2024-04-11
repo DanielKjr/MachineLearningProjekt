@@ -7,17 +7,16 @@ from sklearn.model_selection import GridSearchCV
 from scikeras.wrappers import KerasRegressor
 
 
-data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset') # Database Directory
-model_input = "pokemon.keras"
-model_output = "pokemon_1.keras"
-epochCount = 2
+
 # MASTER INPUTS
-
-
-
+data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset') # Database Directory
+epochCount = 2
 batch_size = 32
 img_height = 180
 img_width = 180
+# MASTER INPUTS
+
+
 
 train_ds = tf.keras.utils.image_dataset_from_directory(
   data_dir,
