@@ -3,20 +3,21 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 
 # Define hyperparameters to experiment with
-# learning_rates = [0.001, 0.01, 0.1]
-learning_rates = [0.001, 0.01]
-# batch_sizes = [16, 32, 64]
-batch_sizes = [16, 32]
-# num_epochs = [3, 5, 8]
-num_epochs = [1]
-# optimizers = ['adam', 'sgd', 'rmsprop']
-optimizers = ['adam']
+learning_rates = [0.001, 0.01, 0.1]
+batch_sizes = [16, 32, 64]
+num_epochs = [4, 8]
+optimizers = ['adam', 'sgd', 'rmsprop']
+
 
 best_accuracy = 0
 best_hyperparameters = {}
 
 # Load and preprocess data
-data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\testset')
+data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset')
+num_classes = 973 # Full dataset pokemon count
+#data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\testset')
+#num_class = 2 # testset pokemon count
+
 train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
@@ -57,7 +58,7 @@ for optimizer in optimizers:
                 tf.keras.layers.MaxPooling2D(),
                 tf.keras.layers.Flatten(),
                 tf.keras.layers.Dense(128, activation='relu'),
-                tf.keras.layers.Dense(2, activation='softmax')
+                tf.keras.layers.Dense(num_classes, activation='softmax')
             ])
 
             if optimizer == 'adam':
@@ -75,17 +76,18 @@ for optimizer in optimizers:
                 metrics=['accuracy']
             )
 
+            # Clone the model to ensure a fresh start for each experiment
+            model_clone = tf.keras.models.clone_model(model)
+            model_clone.compile(
+                optimizer=optimizer_instance,
+                loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                metrics=['accuracy']
+            )
+
             # Perform experiments for each num_epochs
             for epoch_count in num_epochs:
                 print(f"Training model with lr={lr}, batch_size={bs}, epochs={epoch_count}, optimizer={optimizer}")
 
-                # Clone the model to ensure a fresh start for each experiment
-                model_clone = tf.keras.models.clone_model(model)
-                model_clone.compile(
-                    optimizer=optimizer_instance,
-                    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-                    metrics=['accuracy']
-                )
 
                 # Train the model
                 history = model_clone.fit(
@@ -112,15 +114,21 @@ for optimizer in optimizers:
                 axs[i, j].set_title(f'lr={lr}, batch_size={bs}')
                 axs[i, j].set_xlabel('Epoch')
                 axs[i, j].set_ylabel('Metric')
-                axs[i, j].legend()
-
+                if j == 0 and i == 0:
+                    legend = axs[i, j].legend(loc='upper left')
+    
     # Add the figure to the list of all figures
     all_figures.append(fig)
 
-# Show all figures together
+print("Best hyperparameters:", best_hyperparameters)
+print("Best accuracy:", best_accuracy)
+
+try:
+    with open("best_params.txt", "w") as file:
+        file.write("Best hyperparameters: {}\n".format(best_hyperparameters))
+        file.write("Best accuracy: {}\n".format(best_accuracy))
+except Exception as e:
+    print("FUCK, SOMETHING WENT WRONG TRYING TO SAVE THE best_params.txt !!!!", e)
 
 # Show all figures together
 plt.show()
-
-print("Best hyperparameters:", best_hyperparameters)
-print("Best accuracy:", best_accuracy)
