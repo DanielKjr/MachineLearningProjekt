@@ -130,7 +130,7 @@ for optimizer in optimizers:
     try:
         plt.savefig(f'plot-{optimizer}.png')
     except Exception as e:
-        print("FUCK, SOMETHING WENT WRONG TRYING TO SAVE THE plot.png !!!!", e)
+        print("FUCK, SOMETHING WENT WRONG TRYING TO SAVE THE f'plot-{optimizer}.png' !!!!", e)
 
 print("Best hyperparameters:", best_hyperparameters)
 print("Best accuracy:", best_accuracy)
