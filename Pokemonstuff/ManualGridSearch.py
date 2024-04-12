@@ -3,17 +3,20 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 
 # Define hyperparameters to experiment with
-learning_rates = [0.001, 0.01, 0.1]
-batch_sizes = [16, 32, 64]
-num_epochs = [3, 5, 8]
-# num_epochs = [1]
-optimizers = ['adam', 'sgd', 'rmsprop']
+# learning_rates = [0.001, 0.01, 0.1]
+learning_rates = [0.001, 0.01]
+# batch_sizes = [16, 32, 64]
+batch_sizes = [16, 32]
+# num_epochs = [3, 5, 8]
+num_epochs = [1]
+# optimizers = ['adam', 'sgd', 'rmsprop']
+optimizers = ['adam']
 
 best_accuracy = 0
 best_hyperparameters = {}
 
 # Load and preprocess data
-data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset')
+data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\testset')
 train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
@@ -54,7 +57,7 @@ for optimizer in optimizers:
                 tf.keras.layers.MaxPooling2D(),
                 tf.keras.layers.Flatten(),
                 tf.keras.layers.Dense(128, activation='relu'),
-                tf.keras.layers.Dense(973, activation='softmax')
+                tf.keras.layers.Dense(2, activation='softmax')
             ])
 
             if optimizer == 'adam':
@@ -89,9 +92,17 @@ for optimizer in optimizers:
                     train_ds,
                     validation_data=val_ds,
                     epochs=epoch_count,
-                    batch_size=bs,
-                    verbose=0
+                    batch_size=bs
                 )
+
+                # # Evaluate model performance
+                accuracy = history.history['val_accuracy'][0]
+
+                # Update best hyperparameters if necessary
+                if accuracy > best_accuracy:
+                    best_accuracy = accuracy
+                    best_hyperparameters = {'learning_rate': lr, 'batch_size': bs, 'epochs': epoch_count,
+                                            'optimizer': optimizer}
 
                 # Plot accuracy and loss
                 axs[i, j].plot(history.history['accuracy'], label=f'accuracy (epochs={epoch_count})')
