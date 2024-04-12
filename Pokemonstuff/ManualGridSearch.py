@@ -3,20 +3,28 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 
 # Define hyperparameters to experiment with
+# Normal run time params
 learning_rates = [0.001, 0.01, 0.1]
 batch_sizes = [16, 32, 64]
 num_epochs = [4, 8]
 optimizers = ['adam', 'sgd', 'rmsprop']
+data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset')
+num_classes = 973 # Full dataset pokemon count
+
+
+# Test params
+# data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\testset')
+# num_classes = 2 # testset pokemon count
+# learning_rates = [0.001, 0.01]
+# batch_sizes = [16, 32]
+# num_epochs = [1,2]
+# optimizers = ['adam', 'sgd']
+
 
 
 best_accuracy = 0
 best_hyperparameters = {}
 
-# Load and preprocess data
-data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset')
-num_classes = 973 # Full dataset pokemon count
-#data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\testset')
-#num_class = 2 # testset pokemon count
 
 train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
@@ -119,6 +127,10 @@ for optimizer in optimizers:
     
     # Add the figure to the list of all figures
     all_figures.append(fig)
+    try:
+        plt.savefig(f'plot-{optimizer}.png')
+    except Exception as e:
+        print("FUCK, SOMETHING WENT WRONG TRYING TO SAVE THE plot.png !!!!", e)
 
 print("Best hyperparameters:", best_hyperparameters)
 print("Best accuracy:", best_accuracy)
@@ -129,6 +141,7 @@ try:
         file.write("Best accuracy: {}\n".format(best_accuracy))
 except Exception as e:
     print("FUCK, SOMETHING WENT WRONG TRYING TO SAVE THE best_params.txt !!!!", e)
+
 
 # Show all figures together
 plt.show()
