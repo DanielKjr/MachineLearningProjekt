@@ -19,7 +19,7 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
   # seed=123,
   image_size=(img_height, img_width),
   batch_size=batch_size)
-class_names = train_ds.class_names
+class_names = train_ds.predictionClasses
 model = tf.keras.models.load_model(model_input)
 
 # to måder at gøre det på, de virker ens i det at den kan loade dem, men resultatet er begge gange forkert

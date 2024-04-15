@@ -33,12 +33,7 @@ val_ds = tf.keras.utils.image_dataset_from_directory(
     image_size=(img_height, img_width),
     batch_size=batch_size)
 
-class_names = train_ds.class_names
-#bliver ikke brugt
-# normalization_layer = tf.keras.layers.Rescaling(1. / 255)
-# normalized_ds = train_ds.map(lambda x, y: (normalization_layer(x), y))
-# image_batch, labels_batch = next(iter(normalized_ds))
-# first_image = image_batch[0]
+class_names = train_ds.predictionClasses
 num_classes = 973  # Amount of pokemons in dataset
 
 #compile kun modellen hvis den ikke loades
