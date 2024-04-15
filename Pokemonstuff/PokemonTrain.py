@@ -2,6 +2,8 @@ import numpy as np
 import os
 import tensorflow as tf
 import matplotlib.pyplot as plt
+from keras.optimizers import RMSprop
+from keras import Input
 import keras
 
 # MASTER INPUTS
@@ -9,10 +11,11 @@ data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Datas
 model_input = "pokemon.keras"
 model_output = "pokemon_1.keras"
 epochCount = 8
-loadExistingModel = True
+loadExistingModel = False
 batch_size = 16
 img_height = 180
 img_width = 180
+learnRate = 0.001
 
 train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
@@ -31,16 +34,19 @@ val_ds = tf.keras.utils.image_dataset_from_directory(
     batch_size=batch_size)
 
 class_names = train_ds.class_names
+#bliver ikke brugt
 # normalization_layer = tf.keras.layers.Rescaling(1. / 255)
 # normalized_ds = train_ds.map(lambda x, y: (normalization_layer(x), y))
 # image_batch, labels_batch = next(iter(normalized_ds))
 # first_image = image_batch[0]
 num_classes = 973  # Amount of pokemons in dataset
 
+#compile kun modellen hvis den ikke loades
 if loadExistingModel:
     model = tf.keras.models.load_model(model_input)
 else:
     model = tf.keras.Sequential([
+        tf.keras.layers.Input(shape=(img_height,img_width, 3)),
         tf.keras.layers.Rescaling(1. / 255),
         tf.keras.layers.Conv2D(32, 3, activation='relu'),
         tf.keras.layers.MaxPooling2D(),
@@ -54,8 +60,8 @@ else:
     ])
 
     model.compile(
-        optimizer='rmsprop',
-        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        optimizer=RMSprop(learnRate),
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(),
         metrics=['accuracy'])
 
 
