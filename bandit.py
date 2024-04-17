@@ -9,7 +9,7 @@ class Restaurant:
 # Restaurant values
 restaurants = [Restaurant(10,0.2), Restaurant(8,2), Restaurant(9,5), Restaurant(2,0)]
 
-numberOfAttempts = 50000;
+numberOfAttempts = 50000
 
 threshold = 6.1  # How good does the restaurant need to be?
 

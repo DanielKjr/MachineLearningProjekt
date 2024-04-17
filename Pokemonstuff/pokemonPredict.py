@@ -2,16 +2,10 @@ import numpy as np
 import os
 import tensorflow as tf
 import matplotlib.pyplot as plt
-import keras
 
-# MASTER INPUTS
-maindata = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset')  # Database Directory
-data_dir = os.path.expanduser(fr'~\Desktop\Tests')  # Database Directory
-# data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Images DB\Pokemon Images DB')  # Database Directory
+maindata = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset')
+data_dir = os.path.expanduser(fr'~\Desktop\Tests')
 model_input = "RMSProp.keras"
-# MASTER INPUTS
-
-
 batch_size = 16
 img_height = 180
 img_width = 180
@@ -26,7 +20,7 @@ prediction_dataset = tf.keras.utils.image_dataset_from_directory(
     maindata,
     validation_split=0.2,
     subset="validation",
-    seed=10,
+    seed=8,
     image_size=(img_height, img_width),
     batch_size=batch_size)
 
@@ -35,7 +29,7 @@ predictionClasses = prediction_dataset.class_names
 
 num_classes = 973  # Amount of pokemons in dataset
 model = tf.keras.models.load_model(
-    model_input)  # LOAD THE SAVED MODEL ---------------------------------------------------------------------- LOAD THE SAVED MODEL
+    model_input)
 
 for images, labels in prediction_dataset:
     predictions = model.predict(images)

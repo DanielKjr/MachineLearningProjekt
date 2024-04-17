@@ -2,29 +2,14 @@ import os
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-# Define hyperparameters to experiment with
-# Normal run time params
 learning_rates = [0.001, 0.01, 0.1]
 batch_sizes = [16, 32, 64]
 num_epochs = [4, 8]
 optimizers = ['adam', 'sgd', 'rmsprop']
 data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset')
-num_classes = 973 # Full dataset pokemon count
-
-
-# Test params
-# data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\testset')
-# num_classes = 2 # testset pokemon count
-# learning_rates = [0.001, 0.01]
-# batch_sizes = [16, 32]
-# num_epochs = [1,2]
-# optimizers = ['adam', 'sgd']
-
-
-
+num_classes = 973
 best_accuracy = 0
 best_hyperparameters = {}
-
 
 train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
@@ -84,20 +69,19 @@ for optimizer in optimizers:
                 metrics=['accuracy']
             )
 
-            # Clone the model to ensure a fresh start for each experiment
+            # clone model to get a fresh version each test
             model_clone = tf.keras.models.clone_model(model)
+
             model_clone.compile(
                 optimizer=optimizer_instance,
                 loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                 metrics=['accuracy']
             )
 
-            # Perform experiments for each num_epochs
+
             for epoch_count in num_epochs:
                 print(f"Training model with lr={lr}, batch_size={bs}, epochs={epoch_count}, optimizer={optimizer}")
 
-
-                # Train the model
                 history = model_clone.fit(
                     train_ds,
                     validation_data=val_ds,
@@ -105,10 +89,10 @@ for optimizer in optimizers:
                     batch_size=bs
                 )
 
-                # # Evaluate model performance
+
                 accuracy = history.history['val_accuracy'][0]
 
-                # Update best hyperparameters if necessary
+                # Update best hyperparameters
                 if accuracy > best_accuracy:
                     best_accuracy = accuracy
                     best_hyperparameters = {'learning_rate': lr, 'batch_size': bs, 'epochs': epoch_count,
@@ -130,7 +114,7 @@ for optimizer in optimizers:
     try:
         plt.savefig(f'plot-{optimizer}.png')
     except Exception as e:
-        print(f"FUCK, SOMETHING WENT WRONG TRYING TO SAVE THE f'plot-{optimizer}.png' !!!!", e)
+        print(f"Erro when saving f'plot-{optimizer}.png'", e)
 
 print("Best hyperparameters:", best_hyperparameters)
 print("Best accuracy:", best_accuracy)
@@ -140,7 +124,7 @@ try:
         file.write("Best hyperparameters: {}\n".format(best_hyperparameters))
         file.write("Best accuracy: {}\n".format(best_accuracy))
 except Exception as e:
-    print("FUCK, SOMETHING WENT WRONG TRYING TO SAVE THE best_params.txt !!!!", e)
+    print("Error when saving best_params.txt", e)
 
 
 # Show all figures together

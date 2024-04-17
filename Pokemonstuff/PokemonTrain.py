@@ -1,12 +1,8 @@
 import numpy as np
 import os
 import tensorflow as tf
-import matplotlib.pyplot as plt
 from keras.optimizers import RMSprop
-from keras import Input
-import keras
 
-# MASTER INPUTS
 data_dir = os.path.expanduser(fr'~\Desktop\Pokemon\Pokemon Dataset\Pokemon Dataset')  # Database Directory
 model_input = "pokemon.keras"
 model_output = "pokemon_1.keras"
@@ -67,35 +63,3 @@ history = model.fit(
 )
 
 model.save(model_output)
-
-# acc = history.history['accuracy']
-# val_acc = history.history['val_accuracy']
-#
-# loss = history.history['loss']
-# val_loss = history.history['val_loss']
-#
-# epochs_range = range(epochCount)
-#
-# plt.figure(figsize=(8, 8))
-# plt.subplot(1, 2, 1)
-# plt.plot(epochs_range, acc, label='Training Accuracy')
-# plt.plot(epochs_range, val_acc, label='Validation Accuracy')
-# plt.legend(loc='lower right')
-# plt.title('Training and Validation Accuracy')
-#
-# plt.subplot(1, 2, 2)
-# plt.plot(epochs_range, loss, label='Training Loss')
-# plt.plot(epochs_range, val_loss, label='Validation Loss')
-# plt.legend(loc='upper right')
-# plt.title('Training and Validation Loss')
-# plt.show()
-#
-# plt.figure(figsize=(10, 10))
-# for images, labels in train_ds.take(1):
-#     for i in range(9):
-#         ax = plt.subplot(3, 3, i + 1)
-#         resized_image = tf.image.resize(images[i], (img_height, img_width))
-#         plt.imshow(resized_image.numpy().astype("uint8"))
-#         plt.title(class_names[labels[i]])
-#         plt.axis("off")
-# plt.show()
